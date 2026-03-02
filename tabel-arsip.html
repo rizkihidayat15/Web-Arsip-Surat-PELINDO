@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabel Arsip - PELINDO</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .table-container { padding: 30px; overflow-x: auto; }
+        .table-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .table-title { font-size: 24px; font-weight: 600; color: #1e3c72; }
+        .table-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .search-box { display: flex; align-items: center; background: #fff; border: 2px solid #ddd; border-radius: 6px; padding: 0 12px; }
+        .search-box input { border: none; padding: 10px; font-size: 14px; width: 200px; outline: none; }
+        .search-box input:focus { box-shadow: none; }
+        .search-box svg { width: 18px; height: 18px; color: #666; }
+        .filter-group { display: flex; gap: 10px; align-items: center; }
+        .filter-group select { padding: 10px 35px 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; background: #fff; cursor: pointer; appearance: none; background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path fill="%23333" d="M6 8L1 3h10z"/></svg>'); background-repeat: no-repeat; background-position: right 12px center; }
+        .btn-refresh, .btn-spreadsheet { display: flex; align-items: center; gap: 6px; padding: 10px 16px; background: #2a5298; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; transition: all 0.3s; text-decoration: none; }
+        .btn-refresh:hover, .btn-spreadsheet:hover { background: #1e3c72; }
+        .btn-spreadsheet { background: #27ae60; }
+        .btn-spreadsheet:hover { background: #1e8449; }
+        .btn-refresh.loading svg { animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        .data-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .data-table thead { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; }
+        .data-table th { padding: 14px 12px; text-align: left; font-weight: 600; font-size: 13px; text-transform: uppercase; white-space: nowrap; }
+        .data-table td { padding: 12px; font-size: 13px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .data-table tbody tr:hover { background: #f8f9ff; }
+        .data-table tbody tr:nth-child(even) { background: #fafafa; }
+        .data-table tbody tr:nth-child(even):hover { background: #f8f9ff; }
+        
+        .status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .status-badge.aktif { background: #d4edda; color: #155724; }
+        .status-badge.inaktif { background: #f8d7da; color: #721c24; }
+        
+        .action-btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 4px; transition: all 0.2s; }
+        .action-btn.view { background: #17a2b8; color: white; }
+        .action-btn.view:hover { background: #138496; }
+        .action-btn.delete { background: #dc3545; color: white; }
+        .action-btn.delete:hover { background: #c82333; }
+        
+        .table-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; }
+        .table-info { font-size: 14px; color: #666; }
+        .pagination { display: flex; gap: 8px; align-items: center; }
+        .pagination button { padding: 8px 14px; border: 1px solid #ddd; background: #fff; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+        .pagination button:hover:not(:disabled) { background: #2a5298; color: white; border-color: #2a5298; }
+        .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination .active { background: #2a5298; color: white; border-color: #2a5298; }
+        
+        .no-data, .error-state { text-align: center; padding: 60px 20px; color: #666; }
+        .no-data svg, .error-state svg { width: 80px; height: 80px; color: #ddd; margin-bottom: 20px; }
+        .no-data h3, .error-state h3 { font-size: 20px; margin-bottom: 10px; color: #333; }
+        
+        .loading-state { text-align: center; padding: 60px 20px; }
+        .loading-state .spinner { width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #2a5298; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+        
+        @media (max-width: 1200px) { .data-table { font-size: 12px; } .data-table th, .data-table td { padding: 10px 8px; } }
+        @media (max-width: 768px) { .table-header { flex-direction: column; align-items: flex-start; } .table-controls { width: 100%; flex-direction: column; align-items: stretch; } .search-box input { width: 100%; } .filter-group { flex-wrap: wrap; } .filter-group select { flex: 1; min-width: 140px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <div class="logo-group-wrapper">
+                <div class="logo-group">
+                    <img src="assets/Logo_Danantara.png" alt="Logo Danantara" class="logo-item" onerror="this.style.display='none'">
+                    <img src="assets/Logo_BUMN.png" alt="Logo BUMN" class="logo-item" onerror="this.style.display='none'">
+                    <img src="assets/Logo_PLMT_c.png" alt="Logo PELINDO" class="logo-item logo-pelindo">
+                </div>
+            </div>
+            <h1>Tabel Arsip</h1>
+            <h2>PT. Pelabuhan Indonesia (Pers ero) Multi Terminal</h2>
+        </div>
+        
+        <!-- Navigation Bar -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-left">
+                    <span class="navbar-icon">📋</span>
+                    <span class="navbar-brand">Arsip Pelindo</span>
+                </div>
+                
+                <div class="navbar-center">
+                    <div class="navbar-menu-wrapper">
+                        <a href="dashboard.html" class="nav-link">Dashboard</a>
+                        <a href="index.html" class="nav-link">Form Entry</a>
+                        <a href="tabel-arsip.html" class="nav-link active">Tabel Arsip</a>
+                    </div>
+                </div>
+                
+                <div class="navbar-right">
+                </div>
+            </div>
+        </nav>
+        
+        <div class="table-container">
+            <div class="table-header">
+                <h2 class="table-title">Data Arsip Surat</h2>
+                <div class="table-controls">
+                    <div class="search-box">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="M21 21l-4.35-4.35"></path>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Cari arsip...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <select id="filterTahun">
+                            <option value="">Semua Tahun</option>
+                        </select>
+                        
+                        <select id="filterKlasifikasi">
+                            <option value="">Semua Klasifikasi</option>
+                        </select>
+                        
+                        <select id="filterRetensi">
+                            <option value="">Semua Retensi</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="inaktif">Inaktif</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px;">
+                        <a href="https://docs.google.com/spreadsheets/d/1AOgdjj8-HXFIYpbq5wozePv0OjZF65xae-_qaAVeVok/edit?hl=id&gid=1027813244#gid=1027813244" target="_blank" class="btn-spreadsheet">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            Spreadsheet
+                        </a>
+                        <button class="btn-refresh" id="refreshBtn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 4v6h-6"></path>
+                                <path d="M1 20v-6h6"></path>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="tableContent">
+                <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Memuat data arsip...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="tabel-arsip.js"></script>
+</body>
+</html>

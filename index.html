@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip PELINDO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <div class="logo-group-wrapper">
+                <div class="logo-group">
+                    <img src="assets/Logo_Danantara.png" alt="Logo Danantara" class="logo-item">
+                    <img src="assets/Logo_BUMN.png" alt="Logo BUMN" class="logo-item">
+                    <img src="assets/Logo_PLMT_c.png" alt="Logo PELINDO" class="logo-item logo-pelindo">
+                </div>
+            </div>
+            <h1>Arsip PELINDO</h1>
+            <h2>PT. Pelabuhan Indonesia (Persero) Multi Terminal</h2>
+        </div>
+        
+        <!-- Navigation Bar - Dipisahkan dari header -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-left">
+                    <span class="navbar-icon">📋</span>
+                    <span class="navbar-brand">Arsip Pelindo</span>
+                </div>
+                
+                <!-- Container Menu Tengah -->
+                <div class="navbar-center">
+                    <div class="navbar-menu-wrapper">
+                        <a href="dashboard.html" class="nav-link">Dashboard</a>
+                        <a href="index.html" class="nav-link active">Form Entry</a>
+                        <a href="tabel-arsip.html" class="nav-link">Tabel Arsip</a>
+                    </div>
+                </div>
+                
+                <div class="navbar-right">
+                </div>
+            </div>
+        </nav>
+        
+        <form id="arsipForm" class="arsip-form" novalidate>
+            <!-- Section 1: Data Entry -->
+            <fieldset class="form-section">
+                <legend>Data Entry</legend>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tanggalEntry">TANGGAL ENTRY <span class="required">*</span></label>
+                        <input type="date" id="tanggalEntry" name="tanggalEntry" required>
+                        <span class="error-message" id="error-tanggalEntry"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kopel">KOPEL <span class="required">*</span></label>
+                        <input type="text" id="kopel" name="kopel" placeholder="Masukkan KOPEL" required>
+                        <span class="error-message" id="error-kopel"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kodeUnit">KODE UNIT</label>
+                        <div class="searchable-dropdown">
+                            <input type="text" id="kodeUnit" name="kodeUnit" placeholder="Pilih atau ketik KODE UNIT" autocomplete="off">
+                            <div class="dropdown-list" id="kodeUnitList">
+                                <div class="dropdown-item" data-value="AK">AK - Audit</div>
+                                <div class="dropdown-item" data-value="AP">AP - Accounting & Finance</div>
+                                <div class="dropdown-item" data-value="HC">HC - Human Capital</div>
+                                <div class="dropdown-item" data-value="IT">IT - Information Technology</div>
+                                <div class="dropdown-item" data-value="MK">MK - Marketing</div>
+                                <div class="dropdown-item" data-value="OP">OP - Operations</div>
+                                <div class="dropdown-item" data-value="PK">PK - Pengadaan</div>
+                                <div class="dropdown-item" data-value="QHSE">QHSE - Quality, Health, Safety, Environment</div>
+                                <div class="dropdown-item" data-value="RJ">RJ - Rumah Tangga</div>
+                                <div class="dropdown-item" data-value="SJ">SJ - Sekretariat Jared</div>
+                            </div>
+                        </div>
+                        <span class="error-message" id="error-kodeUnit"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="indeks">INDEKS</label>
+                        <input type="text" id="indeks" name="indeks" placeholder="Masukkan INDEKS">
+                        <span class="error-message" id="error-indeks"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nomorBerkas">NOMOR BERKAS <span class="required">*</span></label>
+                        <input type="text" id="nomorBerkas" name="nomorBerkas" placeholder="Masukkan NOMOR BERKAS (angka saja)" required>
+                        <span class="error-message" id="error-nomorBerkas"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="judulBerkas">JUDUL BERKAS <span class="required">*</span></label>
+                        <input type="text" id="judulBerkas" name="judulBerkas" placeholder="Masukkan JUDUL BERKAS" required>
+                        <span class="error-message" id="error-judulBerkas"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nomorIsiBerkas">NOMOR ISI BERKAS <span class="required">*</span></label>
+                        <input type="text" id="nomorIsiBerkas" name="nomorIsiBerkas" placeholder="Masukkan NOMOR ISI BERKAS" required>
+                        <span class="error-message" id="error-nomorIsiBerkas"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="jenisNaskahDinas">JENIS NASKAH DINAS <span class="required">*</span></label>
+                        <input type="text" id="jenisNaskahDinas" name="jenisNaskahDinas" placeholder="Masukkan JENIS NASKAH DINAS (huruf saja)" required>
+                        <span class="error-message" id="error-jenisNaskahDinas"></span>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <!-- Section 2: Klasifikasi & Surat -->
+            <fieldset class="form-section">
+                <legend>Klasifikasi & Surat</legend>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="klasifikasi">KLASIFIKASI <span class="required">*</span></label>
+                        <div class="searchable-dropdown">
+                            <input type="text" id="klasifikasi" name="klasifikasi" placeholder="Pilih atau ketik KLASIFIKASI" autocomplete="off">
+                            <div class="dropdown-list" id="klasifikasiList">
+                            </div>
+                        </div>
+                        <span class="error-message" id="error-klasifikasi"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nomorSurat">NOMOR SURAT <span class="required">*</span></label>
+                        <input type="text" id="nomorSurat" name="nomorSurat" placeholder="Masukkan NOMOR SURAT" required>
+                        <span class="error-message" id="error-nomorSurat"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tanggalSurat">TANGGAL <span class="required">*</span></label>
+                        <input type="date" id="tanggalSurat" name="tanggalSurat" required>
+                        <span class="error-message" id="error-tanggalSurat"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tahun">TAHUN <span class="required">*</span></label>
+                        <input type="number" id="tahun" name="tahun" placeholder="Tahun otomatis" readonly required>
+                        <span class="error-message" id="error-tahun"></span>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="perihal">PERIHAL <span class="required">*</span></label>
+                        <textarea id="perihal" name="perihal" placeholder="Masukkan PERIHAL" rows="3" required></textarea>
+                        <span class="error-message" id="error-perihal"></span>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <!-- Section 3: Status & Kondisi -->
+            <fieldset class="form-section">
+                <legend>Status & Kondisi</legend>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="tingkatPerkembangan">TINGKAT PERKEMBANGAN <span class="required">*</span></label>
+                        <select id="tingkatPerkembangan" name="tingkatPerkembangan" required>
+                            <option value="">Pilih TINGKAT PERKEMBANGAN</option>
+                            <option value="asli">Asli</option>
+                            <option value="copy">Copy</option>
+                            <option value="draft">Draft</option>
+                            <option value="tembusan">Tembusan</option>
+                        </select>
+                        <span class="error-message" id="error-tingkatPerkembangan"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kondisi">KONDISI <span class="required">*</span></label>
+                        <select id="kondisi" name="kondisi" required>
+                            <option value="">Pilih KONDISI</option>
+                            <option value="baik">Baik</option>
+                            <option value="rusak">Rusak</option>
+                            <option value="sedang">Sedang</option>
+                            <option value="buruk">Buruk</option>
+                        </select>
+                        <span class="error-message" id="error-kondisi"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lokasiSimpan">LOKASI SIMPAN</label>
+                        <input type="text" id="lokasiSimpan" name="lokasiSimpan" placeholder="Masukkan LOKASI SIMPAN">
+                        <span class="error-message" id="error-lokasiSimpan"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="label">LABEL</label>
+                        <input type="text" id="label" name="label" placeholder="Masukkan LABEL">
+                        <span class="error-message" id="error-label"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="retensi">RETENSI AKTIF/INAKTIF <span class="required">*</span></label>
+                        <select id="retensi" name="retensi" required>
+                            <option value="">Pilih RETENSI</option>
+                            <option value="aktif">Aktif</option>
+                            <option value="inaktif">Inaktif</option>
+                        </select>
+                        <span class="error-message" id="error-retensi"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="keterangan">KETERANGAN <span class="required">*</span></label>
+                        <select id="keterangan" name="keterangan" required>
+                            <option value="">Pilih KETERANGAN</option>
+                            <option value="kertas">Kertas</option>
+                            <option value="digital">Digital</option>
+                            <option value="campuran">Campuran</option>
+                        </select>
+                        <span class="error-message" id="error-keterangan"></span>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="reset" class="btn btn-reset" id="resetBtn">Reset</button>
+                <button type="submit" class="btn btn-submit">Simpan</button>
+            </div>
+        </form>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
